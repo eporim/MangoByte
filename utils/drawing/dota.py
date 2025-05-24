@@ -20,6 +20,8 @@ from utils.drawing.table import (ColorCell, DoubleCell, ImageCell, SlantedTextCe
 radiant_icon = settings.resource("images/radiant.png")
 dire_icon = settings.resource("images/dire.png")
 
+STARS_PER_RANK = 5
+
 # mincolor and maxcolor dicts with keys like "Grey3" etc.
 # a script extracted this from vpk\panorama\styles\dotastyles.css
 with open(settings.resource("json/facet_colors.json"), "r") as f:
@@ -808,10 +810,10 @@ async def dota_rank_icon(rank_tier, leaderboard_rank):
 	filename = await httpgetter.cache.new(uri, "png")
 
 	badge_num = rank_tier // 10
-	stars_num = min(rank_tier % 10, 7)
+	stars_num = min(rank_tier % 10, STARS_PER_RANK)
 	modifier = ""
 
-	if leaderboard_rank and badge_num == 7:
+	if leaderboard_rank and badge_num == STARS_PER_RANK:
 		badge_num = 8 # this is to make consistant with what opendota shows
 
 	if badge_num == 8 and leaderboard_rank:

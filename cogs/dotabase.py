@@ -191,8 +191,11 @@ class Dotabase(MangoCog):
 			if " " in pattern:
 				secondary_item_patterns.extend(pattern.split(" "))
 			item_patterns.append(pattern)
+		
+		item_patterns = sorted(item_patterns, key=len, reverse=True)
 		self.item_regex_1 = f"(?:{'|'.join(item_patterns)})"
 		item_patterns.extend(secondary_item_patterns)
+		item_patterns = sorted(item_patterns, key=len, reverse=True)
 		self.item_regex_2 = f"(?:{'|'.join(item_patterns)})"
 
 		pattern_parts = {}
@@ -342,16 +345,23 @@ class Dotabase(MangoCog):
 						return None
 					ability_position = ABILITY_KEY_MAP[key]
 					# use this instead of directly using ability_slot because there are some filler generic_ability things
-					abilities = hero.abilities
+					def filter_keybindable(ability):
+						if ability.innate:
+							return False
+						for bad_behavior in [ "not_learnable", "hidden", "skip_for_keybinds", "innate_ui" ]:
+							if bad_behavior in (ability.behavior or ""):
+								return False
+						return True
+					abilities = list(filter(filter_keybindable, hero.abilities))
 					if ability_position > len(abilities):
 						raise UserError(f"{hero.localized_name} doesn't have that many abilities")
 					if key == "r": # if is ultimate and not invoker, get last ability in list
-						def filter_ulti(ability):
-							for bad_behavior in [ "not_learnable", "hidden" ]:
-								if bad_behavior in (ability.behavior or ""):
-									return False
-							return True
-						abilities = list(filter(filter_ulti, abilities))
+						# def filter_ulti(ability):
+						# 	for bad_behavior in [ "not_learnable", "hidden", "skip_for_keybinds" ]:
+						# 		if bad_behavior in (ability.behavior or ""):
+						# 			return False
+						# 	return True
+						# abilities = list(filter(filter_ulti, abilities))
 						ability_position = len(abilities)
 					return abilities[ability_position - 1]
 		return None

@@ -8,6 +8,17 @@ from utils.tools.logger import logger
 from utils.tools.settings import settings
 from utils.tools.cache import Cache
 
+async def get_cloudflare_id(request):
+	try:
+		pattern = "Cloudflare Ray ID: <strong class=\"font-semibold\">([a-zA-Z0-9]+)</strong>"
+		text = await request.text()
+		match = re.search(pattern, text)
+		if match:
+			return match.group(1)
+	except:
+		return None
+	return None
+
 def raise_error(url, code, errors):
 	template = errors.get(code, errors.get("default", "Http request failed with a {} error"))
 	if code == 404:
@@ -52,6 +63,12 @@ class HttpGetter:
 			else:
 				# text = await r.text()
 				# print(f"ERROR TEXT: {text}")
+				if r.status == 403:
+					cloudflare_id = await get_cloudflare_id(r)
+					if cloudflare_id:
+						logger.error(f"http 403 cloudflare error. url: {url} RayID: {cloudflare_id}")
+						raise HttpError(f"Getting cloudflare blocked. RayID: {cloudflare_id}. Please report to developer.", url, 403)
+
 				raise_error(url, r.status, errors)
 
 	async def post(self, url, return_type="json", errors={}, body={}, headers={}):

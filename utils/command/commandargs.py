@@ -1,5 +1,6 @@
 import chunk
 import datetime
+import inspect
 import math
 import re
 from collections import OrderedDict
@@ -225,7 +226,10 @@ class QueryArg():
 	def check_post_filter(self, p):
 		if self.has_value():
 			if self.post_filter is not None:
-				return self.post_filter.func(p)
+				if len(inspect.signature(self.post_filter.func).parameters) > 1:
+					return self.post_filter.func(p, self.value)
+				else:
+					return self.post_filter.func(p)
 		return True
 	
 	def localize(self):
@@ -610,7 +614,8 @@ def create_matchfilter_args(inter: disnake.CmdInter):
 		ItemArg(inter, "_item"),
 		HeroArg(inter, "with_hero_id", "(?:with|alongside) ",
 			localization_template="alongside a {}",
-			localization_context=LocalizationContext.WhoWith),
+			localization_context=LocalizationContext.WhoWith,
+			post_filter=PostFilter("hero_id", lambda p, v: p.get("hero_id") != v)),
 		HeroArg(inter, "against_hero_id", "(?:against|vs) ",
 			localization_template="vs a {}",
 			localization_context=LocalizationContext.WhoWith),

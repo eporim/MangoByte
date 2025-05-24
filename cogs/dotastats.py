@@ -21,6 +21,7 @@ from utils.tools.helpers import *
 
 from cogs.mangocog import *
 
+STARS_PER_RANK = 5
 
 class MatchNotParsedError(UserError):
 	def __init__(self, match_id, action=None):
@@ -339,20 +340,49 @@ class DotaStats(MangoCog):
 			return f"{emoji}**{name}**"
 		return f"**{name}**"
 
+	def get_match_rank_average(self, matchinfo):
+		if not "players" in matchinfo:
+			return None
+		ranks = []
+		for player in matchinfo["players"]:
+			if "rank_tier" in player:
+				if player["rank_tier"] is not None:
+					ranks.append(player["rank_tier"])
+		if len(ranks) <= 2:
+			return None
+		
+		def normalize_rank(rank):
+			badge_num = rank // 10
+			stars_num = min(rank % 10, STARS_PER_RANK) - 1
+			return (badge_num * STARS_PER_RANK) + stars_num
+		def denormalize_rank(rank):
+			rank = round(rank)
+			badge_num = rank // STARS_PER_RANK
+			stars_num = (rank % STARS_PER_RANK) + 1
+			return round((badge_num * 10.0) + stars_num)
+		ranks = list(map(normalize_rank, ranks))
+		avg = sum(ranks) / float(len(ranks))
+		avg = denormalize_rank(avg)
+		return avg
+
 	def get_player_rank(self, playerinfo):
+		rank_tier = playerinfo.get("rank_tier")
+		leaderboard_rank = playerinfo.get("leaderboard_rank")
+		return self.get_rank_string(rank_tier, leaderboard_rank)
+	
+	def get_rank_string(self, rank_tier: int, leaderboard_rank: int = None):
 		# gets the players rank information as a string with a rank emoticaon
 		rank_strings = [ "Unranked", "Herald", "Guardian", "Crusader", "Archon", "Legend", "Ancient", "Divine", "Immortal" ]
 
-		base_rank_tier = playerinfo.get("rank_tier")
+		base_rank_tier = rank_tier
 		if base_rank_tier is None:
 			base_rank_tier = 0
 		rank_tier = base_rank_tier // 10
-		leaderboard_rank = playerinfo.get("leaderboard_rank")
 		rank_string = f"**{rank_strings[rank_tier]}**"
-		stars = min(base_rank_tier % 10, 7)
+		stars = min(base_rank_tier % 10, STARS_PER_RANK)
 		if stars > 0:
 			rank_string += f" [{stars}]"
-		on_leaderboard = rank_tier >= 7 and leaderboard_rank
+		on_leaderboard = rank_tier >= STARS_PER_RANK and leaderboard_rank
 		if on_leaderboard:
 			rank_string = f"**Immortal** [Rank {leaderboard_rank}]"
 			rank_tier = 8
@@ -517,6 +547,8 @@ class DotaStats(MangoCog):
 		hero_info = self.get_hero_info(player['hero_id'])
 		hero_name = hero_info['name']
 
+		rank_average = self.get_match_rank_average(match)
+
 		duration = get_pretty_duration(match['duration'], postfix=False)
 		winstatus = "Won" if player["win"] != 0 else "Lost"
 		game_mode = self.dota_game_strings.get(f"game_mode_{match.get('game_mode')}", "Unknown")
@@ -529,6 +561,9 @@ class DotaStats(MangoCog):
 					f"[OpenDota](https://www.opendota.com/matches/{match_id}), or "
 					f"[STRATZ](https://www.stratz.com/match/{match_id})")
 		
+		if rank_average:
+			description += f"\nAvg Rank: {self.get_rank_string(rank_average)}"
+
 		if description_intro:
 			description = description_intro + "\n\n" + description
 
