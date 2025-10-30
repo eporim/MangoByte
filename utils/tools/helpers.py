@@ -148,16 +148,19 @@ def read_json(filename):
 
 
 class UserError(Exception):
-	def __init__(self, message, embed=None, file=None):
+	def __init__(self, message, embed=None, file=None, ephemeral=False):
 		self.message = message
 		self.embed = embed
 		self.file = file
+		self.ephemeral = ephemeral
 	async def send_self(self, ctx_inter: InterContext, botdata):
 		kwargs = {}
 		if self.embed:
 			kwargs["embed"] = self.embed
 		if self.file:
 			kwargs["file"] = self.file
+		if self.ephemeral:
+			kwargs["ephemeral"] = self.ephemeral
 
 		await ctx_inter.send(self.message, **kwargs)
 

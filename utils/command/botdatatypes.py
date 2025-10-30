@@ -1,5 +1,6 @@
 import re
 from abc import abstractmethod
+import zoneinfo
 
 import disnake
 from disnake.ext import commands
@@ -102,6 +103,28 @@ class Boolean(ConfigVarType):
 		else:
 			raise InvalidInputError("Try giving me something like `enable` or `disable`")
 
+# \nAmerica/Los_Angeles\nAmerica/Denver\nAmerica/Chicago\nAmerica/New_York\nEurope/London\nEurope/Paris\nAsia/Tokyo\nAsia/Seoul\nAustralia/Sydney\nEtc/UTC
+
+ALL_TIMEZONES = sorted(zoneinfo.available_timezones())
+class Timezone(ConfigVarType):
+	@classmethod
+	async def _localize(cls, value, inter):
+		if value is None:
+			return "*None / Unset*"
+		if value in ALL_TIMEZONES:
+			now = datetime.datetime.now()
+			date = now.astimezone(zoneinfo.ZoneInfo(value))
+			time_str = date.strftime("%I:%M %p").lstrip("0")
+			return f"`{value}` ({time_str})"
+		return "ERROR: can't parse this timezone idk whats wrong"
+
+	@classmethod
+	async def _parse(cls, value, inter):
+		if value.lower() in [ "reset", "none", "off", "null", "unset" ]:
+			return None
+
+		if value in ALL_TIMEZONES:
+			return value
 
 class HoursInteger(ConfigVarType):
 	@classmethod

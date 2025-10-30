@@ -133,6 +133,13 @@ userinfo_variables = [
 		"type": types.Boolean,
 		"description": "Enabling this will mean mangobyte will ignore when you type in a #tts channel",
 		"example": "enable"
+	},
+	{
+		"key": "timezone",
+		"default": None,
+		"type": types.Timezone,
+		"description": "Configures a timezone to use for the `/time` command and for the localized times in images for stuff like the `/recent` command.\n\nShould be in the **IANA timezone database** format. You can get yours from an online tool like [this](https://www.addevent.com/c/documentation/tools/time-zone-lookup), or from wherever ya like. Here are a couple examples:\n`America/Los_Angeles`\n`America/Denver`\n`America/Chicago`\n`America/New_York`\n`Europe/London`\n`Europe/Paris`\n`Asia/Tokyo`\n`Asia/Seoul`\n`Australia/Sydney`\n`Etc/UTC`\n\nUse `None` to reset/unset this setting.",
+		"example": "America/Los_Angeles"
 	}
 ]
 

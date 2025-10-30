@@ -15,6 +15,7 @@ from io import BytesIO
 import urllib.parse
 import base64
 import inspect
+import zoneinfo
 
 import disnake
 import praw
@@ -52,6 +53,18 @@ HELP_ARG_ENUM = commands.option_enum({
 	"Category: DotaStats": "cog:DotaStats",
 	"Category: Pokemon": "cog:Pokemon",
 	"Category: Admin": "cog:Admin"
+})
+
+
+TIME_TYPE_ENUM = commands.option_enum({
+	"Short Time": "t",
+	"Long Time": "T",
+	"Short Date": "d",
+	"Long Date": "D",
+	"Long Date + Short Time": "f",
+	"Long Date + Day of Week + Short Time": "F",
+	"Relative": "R",
+	"ALL FORMATS": "all"
 })
 
 REDDIT_COMMENTS_ENUM = commands.option_enum({
@@ -975,6 +988,95 @@ class General(MangoCog):
 		
 		embed.description = description
 		await inter.send(embed=embed)
+
+	def _parse_hour_ampm(self, now: datetime.datetime, hour: int, ampm: str) -> datetime.datetime:
+		if ampm == "pm" and hour != 12:
+			hour += 12
+		elif ampm == "am" and hour == 12:
+			hour = 0
+
+		target = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+		if target <= now:
+			target += datetime.timedelta(days=1)
+		return target
+
+	def _parse_nearest_time(self, now: datetime.datetime, hour: int, minute: int) -> datetime.datetime:
+		target = now.replace(hour=hour % 24, minute=minute, second=0, microsecond=0)
+		if target <= now:
+			target += datetime.timedelta(days=1)
+		return target
+
+	async def _get_time(self, inter: disnake.CmdInter, time_str: str) -> datetime.datetime:
+		now = datetime.datetime.now()
+		query = time_str.strip()
+
+		# .astimezone(zoneinfo.ZoneInfo(value))
+		userinfo = botdata.userinfo(inter.author.id)
+		timezone = userinfo.timezone
+		
+		time_str = time_str.strip()
+
+		time_formats = [
+			# "in 2 hours"
+			{
+				"pattern": r"^(?:in\s+)?\s+(\d+)\s*hours?$",
+				"func": lambda now, m: now + datetime.timedelta(hours=int(m.group(1)))
+			},
+			# "in 30 minutes"
+			{
+				"pattern": r"^(?:in\s+)?(\d+)\s*(?:minutes?|mins?)$",
+				"func": lambda now, m: now + datetime.timedelta(minutes=int(m.group(1)))
+			},
+			# "5pm" / "2am" (12-hour clock)
+			{
+				"pattern": r"^(1[0-2]|0?[1-9])\s*(am|pm)$",
+				"func": lambda now, m: self._parse_hour_ampm(now, int(m.group(1)), m.group(2).lower()),
+				"needs_timezone": True
+			},
+			# "5:00" — assumes the *next* occurrence of that time
+			{
+				"pattern": r"^(\d{1,2}):(\d{2})$",
+				"func": lambda now, m: self._parse_nearest_time(now, int(m.group(1)), int(m.group(2))),
+				"needs_timezone": True
+			}
+		]
+
+		for tf in time_formats:
+			pat = tf["pattern"]
+			regex = re.compile(pat, re.IGNORECASE) if isinstance(pat, str) else pat
+			m = regex.fullmatch(query)
+			if m:
+				if tf.get("needs_timezone", False):
+					if timezone is None:
+						raise UserError("Set your timezone by doin `/userconfig timezone`")
+					now = now.astimezone(zoneinfo.ZoneInfo(timezone))
+				return tf["func"](now, m)
+		
+		raise UserError("Idk what you mean, gimme a format like: '5pm', '5:00', or 'in 2 hours/minutes'")
+	
+	@commands.slash_command(ephemeral=True)
+	async def time(self, inter: disnake.CmdInter, time_str: str, format: TIME_TYPE_ENUM = "t"):
+		"""Gets you the discord format for a time that you give
+		
+		Parameters
+		----------
+		time_str: The time in a format like '5pm', '5:00', or 'in 2 hours/minutes'
+		"""
+		the_time = await self._get_time(inter, time_str)
+
+		ts = int(the_time.timestamp())
+
+		types = ["t", "T", "d", "D", "f", "F", "R"]
+
+		result = ""
+		if format in types:
+			t = format
+			result = f"<t:{ts}:{t}> `<t:{ts}:{t}>`"
+		elif format == "all":
+			for t in types:
+				result += f"\n<t:{ts}:{t}> `<t:{ts}:{t}>`"
+
+		await inter.send(result, ephemeral=True)
 
 
 
