@@ -1024,7 +1024,7 @@ class General(MangoCog):
 		time_formats = [
 			# "in 2 hours"
 			{
-				"pattern": r"^(?:in\s+)?\s+(\d+\.?\d*)\s*hours?$",
+				"pattern": r"^(?:in\s+)?(\d+\.?\d*)\s*hours?$",
 				"func": lambda now, m: now + datetime.timedelta(hours=float(m.group(1)))
 			},
 			# "in 30 minutes"
