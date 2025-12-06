@@ -156,7 +156,7 @@ async def get_stratz_match(match_id):
 		return await httpgetter.get(url, cache=True, errors={
 			500: "Looks like something wrong with the STRATZ api",
 			204: "STRATZ hasn't recieved this match yet. Try again a bit later",
-			403: "got some weird auth error"
+			403: "Got a STRATZ auth error. I'll notify the bot developer of this issue."
 		}, headers=headers)
 	except aiohttp.ClientConnectorError:
 		logger.info("ClientConnectorError on stratz api result")

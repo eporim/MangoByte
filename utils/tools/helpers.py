@@ -268,6 +268,16 @@ class AsyncBundler():
 			result += f"\n{self.exceptions_dict[e]} failed with {e}"
 		return result
 
+class DeveloperNotifError(UserError):
+	"""A user error that also notifies the bot developer of something"""
+	def __init__(self, message, dev_message):
+		super().__init__(message)
+		self.dev_message = dev_message
+
+	async def send_self(self, ctx_inter: InterContext, botdata):
+		await ctx_inter.bot.owner.send(self.dev_message)
+		await super().send_self(ctx_inter, botdata)
+
 class HttpError(UserError):
 	"""An http error with an error code"""
 	def __init__(self, message, url, code):

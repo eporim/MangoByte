@@ -1000,7 +1000,12 @@ class General(MangoCog):
 			target += datetime.timedelta(days=1)
 		return target
 
-	def _parse_nearest_time(self, now: datetime.datetime, hour: int, minute: int) -> datetime.datetime:
+	def _parse_nearest_time(self, now: datetime.datetime, hour: int, minute: int, ampm: str) -> datetime.datetime:
+		if ampm == "pm" and hour != 12:
+			hour += 12
+		elif ampm == "am" and hour == 12:
+			hour = 0
+		
 		target = now.replace(hour=hour % 24, minute=minute, second=0, microsecond=0)
 		if target <= now:
 			target += datetime.timedelta(days=1)
@@ -1019,13 +1024,13 @@ class General(MangoCog):
 		time_formats = [
 			# "in 2 hours"
 			{
-				"pattern": r"^(?:in\s+)?\s+(\d+)\s*hours?$",
-				"func": lambda now, m: now + datetime.timedelta(hours=int(m.group(1)))
+				"pattern": r"^(?:in\s+)?\s+(\d+\.?\d*)\s*hours?$",
+				"func": lambda now, m: now + datetime.timedelta(hours=float(m.group(1)))
 			},
 			# "in 30 minutes"
 			{
-				"pattern": r"^(?:in\s+)?(\d+)\s*(?:minutes?|mins?)$",
-				"func": lambda now, m: now + datetime.timedelta(minutes=int(m.group(1)))
+				"pattern": r"^(?:in\s+)?(\d+\.?\d*)\s*(?:minutes?|mins?)$",
+				"func": lambda now, m: now + datetime.timedelta(minutes=float(m.group(1)))
 			},
 			# "5pm" / "2am" (12-hour clock)
 			{
@@ -1035,8 +1040,8 @@ class General(MangoCog):
 			},
 			# "5:00" — assumes the *next* occurrence of that time
 			{
-				"pattern": r"^(\d{1,2}):(\d{2})$",
-				"func": lambda now, m: self._parse_nearest_time(now, int(m.group(1)), int(m.group(2))),
+				"pattern": r"^(\d{1,2}):(\d{2})\s*(am|pm)?$",
+				"func": lambda now, m: self._parse_nearest_time(now, int(m.group(1)), int(m.group(2)), m.group(3).lower()),
 				"needs_timezone": True
 			}
 		]
@@ -1048,11 +1053,11 @@ class General(MangoCog):
 			if m:
 				if tf.get("needs_timezone", False):
 					if timezone is None:
-						raise UserError("Set your timezone by doin `/userconfig timezone`")
+						raise UserError("Set your timezone by doin `/userconfig timezone`", ephemeral=True)
 					now = now.astimezone(zoneinfo.ZoneInfo(timezone))
 				return tf["func"](now, m)
 		
-		raise UserError("Idk what you mean, gimme a format like: '5pm', '5:00', or 'in 2 hours/minutes'")
+		raise UserError("Idk what you mean, gimme a format like: '5pm', '5:00', or 'in 2 hours/minutes'", ephemeral=True)
 	
 	@commands.slash_command(ephemeral=True)
 	async def time(self, inter: disnake.CmdInter, time_str: str, format: TIME_TYPE_ENUM = "t"):

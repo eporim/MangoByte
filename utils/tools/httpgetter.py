@@ -33,7 +33,7 @@ class HttpGetter:
 		self.session = aiohttp.ClientSession(loop=self.loop)
 		self.cache = Cache(self.loop)
 
-	async def get(self, url, return_type="json", cache=False, cache_permanent=False, errors={}, headers=None):
+	async def get(self, url: str, return_type="json", cache=False, cache_permanent=False, errors={}, headers=None):
 		if cache_permanent:
 			cache = True
 		if cache and await self.cache.get_filename(url):
@@ -67,7 +67,24 @@ class HttpGetter:
 					cloudflare_id = await get_cloudflare_id(r)
 					if cloudflare_id:
 						logger.error(f"http 403 cloudflare error. url: {url} RayID: {cloudflare_id}")
-						raise HttpError(f"Getting cloudflare blocked. RayID: {cloudflare_id}. Please report to developer.", url, 403)
+						# raise HttpError(f"Getting cloudflare blocked. RayID: {cloudflare_id}. Please report to developer.", url, 403)
+
+					if "api.stratz.com" in url:
+						error_message = f"Http 403 Auth error on STRATZ request:\n<{url}>\n"
+						if cloudflare_id:
+							error_message += f"\nGotta complain in discord using this cloudflare ID: {cloudflare_id}"
+						else:
+							error_message += f"\nAPI token probably expired. Gotta get new one: <https://stratz.com/api>"
+						try:
+							text = await r.text()
+							if text:
+								error_message += f"\n```{text}```"
+						except:
+							pass
+						user_message = "Got a STRATZ auth error. I've notified the bot developer of the issue. Try again in a day or so."
+						raise DeveloperNotifError(user_message, error_message)
+
+
 
 				raise_error(url, r.status, errors)
 

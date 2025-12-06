@@ -702,19 +702,19 @@ def create_dota_gif_main(match, stratz_match, start_time, end_time, ms_per_secon
 	for t in range(match_start, end_time + 1):
 		events = filter(lambda e: e["time"] == t, runeEvents)
 		for e in filter(lambda e: e["time"] == t and e["action"] == 0, runeEvents):
-			current_runes[e["id"]] = {
-				"type": e["runeType"],
-				"x": e["x"],
-				"y": e["y"]
+			current_runes[e["indexId"]] = {
+				"type": e["rune"],
+				"x": e["positionX"],
+				"y": e["positionY"]
 			}
 		if t >= start_time and current_runes:
 			runes[t] = current_runes.copy()
 		for e in filter(lambda e: e["time"] == t and e["action"] == 1, runeEvents):
-			if e["id"] in current_runes:
-				del current_runes[e["id"]]
+			if e["indexId"] in current_runes:
+				del current_runes[e["indexId"]]
 	# rune icons
 	rune_icons = {}
-	for i in range(0, 9):
+	for i in range(0, 10):
 		scale = 0.5
 		icon = Image.open(settings.resource(f"images/map/rune_{i}.png"))
 		rune_icons[i] = icon.resize((int(icon.width * scale), int(icon.height * scale)), Image.LANCZOS)
@@ -739,6 +739,9 @@ def create_dota_gif_main(match, stratz_match, start_time, end_time, ms_per_secon
 			rune = runes[t][rune]
 			if rune["type"] in rune_icons:
 				image = place_icon_on_map(image, rune_icons[rune["type"]], rune["x"], rune["y"])
+			else:
+				logger.error(f"Unknown rune_id {rune['type']} draw attempt at {t} seconds in match {stratz_match['id']}") # rune images grabbed from wiki. gotta update the range number that builds the list in this func too.
+				
 
 		image = paste_image(image, clock_bg_image, (image.width // 2) - (clock_bg_image.width // 2), 0)
 		draw = ImageDraw.Draw(image)
