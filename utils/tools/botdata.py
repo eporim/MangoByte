@@ -80,7 +80,7 @@ userinfo_variables = [
 		"key": "steam",
 		"default": None,
 		"type": types.SteamId,
-		"description": "This links your steam account to your discord account for mangobyte. You have to give this either your steam32 or steam64 id. An easy way to find this is to open dota and find your 'Friend ID', or look at the end of your dotabuff/opendota profile url.\n\nIf you open up dota and go to your profile, your 'Friend ID' will be just under your name, and will look like this:\n<:steam:414724031380586496> **FRIEND ID:** `<number>`\n\nIn which case you should do `/userconfig steam <number>`\n\nTo un-register, try setting this to `clear` or `reset`",
+		"description": "This links your steam account to your discord account for mangobyte. You have to give this either your steam32 or steam64 id. An easy way to find this is to open dota and find your 'Friend ID', or look at the end of your dotabuff/opendota profile url.\n\nIf you open up dota and go to your profile, your 'Friend ID' will be just under your name, and will look like this:\n<:steam:414724031380586496> **FRIEND ID:** `<number>`\n\nIn which case you should do `/userconfig steam <number>`\n\n⚠️ **Note:** Contact the  admin if you want to unlink your account from Steam verifier.",
 		"example": "70388657"
 	},
 	{
@@ -301,7 +301,8 @@ class GuildInfo(BotDataItem):
 			("voicechannel", None),
 			("invalidcommands", False),
 			("banned_users", []),
-			("disabled_commands", [])
+			("disabled_commands", []),
+			("rank_role_ids", {})
 		])
 		for var in self.variables:
 			defaults[var["key"]] = var["default"]

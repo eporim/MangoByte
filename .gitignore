@@ -99,6 +99,10 @@ settings.json
 errors.json
 tmpfile
 
+# Docker data volumes
+data/
+backups/
+
 resource/temp
 resource/cache
 

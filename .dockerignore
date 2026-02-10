@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Data files (mounted as volumes)
+botdata.json
+settings.json
+data/
+backups/
+
+# Cache and temp files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.cache
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temp files
+tmpfile
+resource/temp/
+resource/cache/
+
+# Root markdown files (except README)
+/CONTRIBUTING.md
+/CHANGELOG.md
+/LICENSE.md
+
+# Development
+.env
+venv/
+ENV/

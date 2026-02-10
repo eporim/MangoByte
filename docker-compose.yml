@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mangobyte:
+    build: .
+    container_name: mangobyte
+    restart: unless-stopped
+    volumes:
+      - ./data/botdata.json:/app/botdata.json
+      - ./data/settings.json:/app/settings.json
+    environment:
+      - TZ=UTC
+
+  backup:
+    image: alpine:latest
+    container_name: mangobyte-backup
+    restart: unless-stopped
+    volumes:
+      - ./data:/data:ro
+      - ./backups:/backups
+    entrypoint: /bin/sh
+    command: >
+      -c "while true; do
+        TIMESTAMP=$$(date +%Y%m%d_%H%M%S);
+        cp /data/botdata.json /backups/botdata_$$TIMESTAMP.json 2>/dev/null || true;
+        cp /data/settings.json /backups/settings_$$TIMESTAMP.json 2>/dev/null || true;
+        ls -t /backups/botdata_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
+        ls -t /backups/settings_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
+        echo \"Backup completed at $$TIMESTAMP\";
+        sleep 43200;
+      done"

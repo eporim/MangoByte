@@ -36,6 +36,8 @@ async def localize_embed(inter: disnake.Interaction, var, value, example_command
 
 async def parse(inter, var, value, currentvalue):
 	if value in [ "default", "reset", "clear", "null" ]:
+		if var["key"] == "steam":
+			raise InvalidInputError("Steam unlinking is disabled. Contact an admin if you need to unlink your account.")
 		return var["default"]
 
 	if var.get("list"):
@@ -284,8 +286,8 @@ class SteamId(ConfigVarType):
 		dotastats_cog = inter.bot.get_cog("DotaStats")
 
 		value = str(value)
-		if value.lower() in [ "none", "reset", "default" ]:
-			return None
+		if value.lower() in [ "none", "reset", "default", "clear", "null", "unset", "unlink" ]:
+			raise InvalidInputError("Steam unlinking is disabled. Contact an admin if you need to unlink your account.")
 
 		patterns = [
 			r"<?https?://(?:www\.)?opendota\.com/players/(\d+)/?>?",
