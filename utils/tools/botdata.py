@@ -80,21 +80,21 @@ userinfo_variables = [
 		"key": "steam",
 		"default": None,
 		"type": types.SteamId,
-		"description": "This links your steam account to your discord account for mangobyte. You have to give this either your steam32 or steam64 id. An easy way to find this is to open dota and find your 'Friend ID', or look at the end of your dotabuff/opendota profile url.\n\nIf you open up dota and go to your profile, your 'Friend ID' will be just under your name, and will look like this:\n<:steam:414724031380586496> **FRIEND ID:** `<number>`\n\nIn which case you should do `/userconfig steam <number>`\n\n⚠️ **Note:** Contact the  admin if you want to unlink your account from Steam verifier.",
+		"description": "This links your steam account to your discord account for Steam Verifier. You have to give this either your steam32 or steam64 id. An easy way to find this is to open dota and find your 'Friend ID', or look at the end of your dotabuff/opendota profile url.\n\nIf you open up dota and go to your profile, your 'Friend ID' will be just under your name, and will look like this:\n<:steam:414724031380586496> **FRIEND ID:** `<number>`\n\nIn which case you should do `/userconfig steam <number>`\n\n⚠️ **Note:** Contact the  admin if you want to unlink your account from Steam verifier.",
 		"example": "70388657"
 	},
 	{
 		"key": "intro",
 		"default": "local:helloits",
 		"type": types.ShortClip,
-		"description": "This sets the clip that will play whenever you join a voice channel that mangobyte is in. Note that this clip cannot be longer than 4.5 seconds\n\nTo see a bunch of information on the types of clips available and the format of a clip id, try running the command `/docs Clips`\n\nTo make it so no clip plays when you join the channel, try setting this to `none`, `silent`, `off`, or `disable`",
+		"description": "This sets the clip that will play whenever you join a voice channel that Steam Verifier is in. Note that this clip cannot be longer than 4.5 seconds\n\nTo see a bunch of information on the types of clips available and the format of a clip id, try running the command `/docs Clips`\n\nTo make it so no clip plays when you join the channel, try setting this to `none`, `silent`, `off`, or `disable`",
 		"example": "local:math"
 	},
 	{
 		"key": "outro",
 		"default": "local:farewell",
 		"type": types.ShortClip,
-		"description": "This sets the clip that will play whenever you leave a voice channel that mangobyte is in. Note that this clip cannot be longer than 4.5 seconds\n\nTo see a bunch of information on the types of clips available and the format of a clip id, try running the command `/docs Clips`\n\nTo make it so no clip plays when you join the channel, try setting this to `none`, `silent`, `off`, or `disable`",
+		"description": "This sets the clip that will play whenever you leave a voice channel that Steam Verifier is in. Note that this clip cannot be longer than 4.5 seconds\n\nTo see a bunch of information on the types of clips available and the format of a clip id, try running the command `/docs Clips`\n\nTo make it so no clip plays when you join the channel, try setting this to `none`, `silent`, `off`, or `disable`",
 		"example": "dota:troll_warlord_troll_lose_03"
 	},
 	{
@@ -124,14 +124,14 @@ userinfo_variables = [
 		"default": None,
 		"disabled": True,
 		"type": types.Boolean,
-		"description": "Enabling this will let mangobyte dm you about Dota blog updates",
+		"description": "Enabling this will let Steam Verifier dm you about Dota blog updates",
 		"example": "enable"
 	},
 	{
 		"key": "ignoremytts",
 		"default": False,
 		"type": types.Boolean,
-		"description": "Enabling this will mean mangobyte will ignore when you type in a #tts channel",
+		"description": "Enabling this will mean Steam Verifier will ignore when you type in a #tts channel",
 		"example": "enable"
 	},
 	{
@@ -174,14 +174,14 @@ guildinfo_variables = [
 		"key": "reactions",
 		"default": False,
 		"type": types.Boolean,
-		"description": "Allows mangobyte to react to users messages depending on what they are saying",
+		"description": "Allows Steam Verifier to react to users messages depending on what they are saying",
 		"example": "enable"
 	},
 	{
 		"key": "ttschannel",
 		"default": None,
 		"type": types.TextChannel,
-		"description": "If someone types in the given channel, mangobyte will automatically interpret it as a `/say` command, and say it in the voicechannel that they are in. To say something in this channel without doing a tts, try adding a `//` or `#` to the front of your message",
+		"description": "If someone types in the given channel, Steam Verifier will automatically interpret it as a `/say` command, and say it in the voicechannel that they are in. To say something in this channel without doing a tts, try adding a `//` or `#` to the front of your message",
 		"example": "#tts"
 	},
 	{
@@ -195,28 +195,28 @@ guildinfo_variables = [
 		"key": "intros",
 		"default": True,
 		"type": types.Boolean,
-		"description": "Allows mangobyte to announce users when they enter the voice channel that mangobyte is currently in",
+		"description": "Allows Steam Verifier to announce users when they enter the voice channel that Steam Verifier is currently in",
 		"example": "disable"
 	},
 	{
 		"key": "outros",
 		"default": True,
 		"type": types.Boolean,
-		"description": "Allows mangobyte to announce when users leave the voice channel that mangobyte is currently in",
+		"description": "Allows Steam Verifier to announce when users leave the voice channel that Steam Verifier is currently in",
 		"example": "disable"
 	},
 	{
 		"key": "ttslang",
 		"default": "en",
 		"type": types.GttsLang,
-		"description": "Sets the language/voice that mangobyte will use to speak when playing TTS clips. To see a list of all of the possible languages, check out [this file](https://github.com/mdiller/MangoByte/blob/master/resource/json/gtts_languages.json) in the github repo",
+		"description": "Sets the language/voice that Steam Verifier will use to speak when playing TTS clips. To see a list of all of the possible languages, check out [this file](https://github.com/mdiller/MangoByte/blob/master/resource/json/gtts_languages.json) in the github repo",
 		"example": "Russian"
 	},
 	{
 		"key": "usenickname",
 		"default": False,
 		"type": types.Boolean,
-		"description": "Sets whether mangobyte will use the user's name or nickname when announcing that they have joined or left a channel",
+		"description": "Sets whether Steam Verifier will use the user's name or nickname when announcing that they have joined or left a channel",
 		"example": "enable"
 	},
 	{
@@ -230,7 +230,7 @@ guildinfo_variables = [
 		"key": "announcetts",
 		"default": False,
 		"type": types.Boolean,
-		"description": "Sets whether mangobyte announce the user's name before playing the clip when they the user plays a clip by typing something in the tts channel",
+		"description": "Sets whether Steam Verifier announce the user's name before playing the clip when they the user plays a clip by typing something in the tts channel",
 		"example": "enable"
 	},
 	{
@@ -238,7 +238,7 @@ guildinfo_variables = [
 		"default": None,
 		"disabled": True,
 		"type": types.TextChannel,
-		"description": "The channel in which mangobyte will post to notify about new dota patches when it detects them",
+		"description": "The channel in which Steam Verifier will post to notify about new dota patches when it detects them",
 		"example": "#dota"
 	},
 	{
@@ -246,14 +246,14 @@ guildinfo_variables = [
 		"default": None,
 		"disabled": True,
 		"type": types.TextChannel,
-		"description": "The channel to which mangobyte will post blog notifications",
+		"description": "The channel to which Steam Verifier will post blog notifications",
 		"example": "#dota"
 	},
 	{
 		"key": "ttschannelwarn",
 		"default": True,
 		"type": types.Boolean,
-		"description": "Disable this to prevent mangobyte from saying \"I'm not in a voice channel on this server/guild\" when you type in a tts channel and mangobyte isn't summoned",
+		"description": "Disable this to prevent Steam Verifier from saying \"I'm not in a voice channel on this server/guild\" when you type in a tts channel and Steam Verifier isn't summoned",
 		"example": "disable"
 	},
 	{
@@ -261,7 +261,7 @@ guildinfo_variables = [
 		"default": [],
 		"list": True,
 		"type": types.UserBot,
-		"description": "A list of bots that mangobyte will not ignore when processing commands or tts",
+		"description": "A list of bots that Steam Verifier will not ignore when processing commands or tts",
 		"example": "add @Bot123"
 	},
 	{
@@ -282,14 +282,14 @@ guildinfo_variables = [
 		"key": "afktimeout",
 		"default": 96,
 		"type": types.HoursInteger,
-		"description": "How many hours mangobyte should hang out in a voice channel without talking before leaving.",
+		"description": "How many hours Steam Verifier should hang out in a voice channel without talking before leaving.",
 		"example": "4"
 	},
 	{
 		"key": "ttsvoicechannel",
 		"default": True,
 		"type": types.Boolean,
-		"description": "Treats the text channel for the voice channel mangobyte is currently in as a tts channel (will auto-tts the messages).",
+		"description": "Treats the text channel for the voice channel Steam Verifier is currently in as a tts channel (will auto-tts the messages).",
 		"example": "disable"
 	}
 ]

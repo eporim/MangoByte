@@ -118,7 +118,7 @@ async def initialize(bot: commands.Bot, startupTimer: SimpleTimer):
 				logger.info("attempting to finish initialization")
 				if not status_set:
 					game = disnake.Activity(
-						name="DOTA 3 [/help]",
+						name="powered by MangoByte",
 						type=disnake.ActivityType.playing,
 						start=datetime.datetime.utcnow())
 					await bot.change_presence(status=disnake.Status.online, activity=game)

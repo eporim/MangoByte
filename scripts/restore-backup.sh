@@ -6,17 +6,19 @@
 
 set -e
 
-APP_DIR="/DATA/AppData/mangobyte"
+# Auto-detect paths
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+APP_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DATA_DIR="$APP_DIR/data"
 BACKUP_DIR="$APP_DIR/backups"
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "=== MangoByte Backup Restoration ==="
+echo "App directory: $APP_DIR"
 
 # List available backups
 echo ""
 echo "Available backups:"
-ls -la "$BACKUP_DIR"/botdata_*.json 2>/dev/null | awk '{print $NF}' | sed 's/.*botdata_/  /' | sed 's/.json//' || echo "  No backups found"
+ls -1 "$BACKUP_DIR"/botdata_*.json 2>/dev/null | xargs -I {} basename {} .json | sed 's/botdata_/  /' || echo "  No backups found"
 echo ""
 
 if [ -z "$1" ]; then
@@ -36,15 +38,19 @@ if [ ! -f "$BOTDATA_BACKUP" ]; then
 fi
 
 echo "Stopping containers..."
-cd "$SCRIPT_DIR/.." 2>/dev/null || cd "$APP_DIR/app"
+cd "$APP_DIR"
 docker compose down
 
 echo "Restoring botdata.json from $BOTDATA_BACKUP..."
 cp "$BOTDATA_BACKUP" "$DATA_DIR/botdata.json"
 
 if [ -f "$SETTINGS_BACKUP" ]; then
-    echo "Restoring settings.json from $SETTINGS_BACKUP..."
-    cp "$SETTINGS_BACKUP" "$DATA_DIR/settings.json"
+    read -p "Also restore settings.json? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Restoring settings.json from $SETTINGS_BACKUP..."
+        cp "$SETTINGS_BACKUP" "$DATA_DIR/settings.json"
+    fi
 fi
 
 echo "Starting containers..."

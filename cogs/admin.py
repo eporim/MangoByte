@@ -12,9 +12,9 @@ from .mangocog import *
 perms_cmd_deprecation_message = "**Note:** This command will soon be *deprecated*. Check out `/docs Command and User Permissions` for more info."
 
 class Admin(MangoCog):
-	"""Commands to help manage mangobyte on your server/guild
+	"""Commands to help manage Steam Verifier on your server/guild
 	
-	Primarily used to configure mangobyte for this particular server/guild, and also for moving in and out of voice channels.
+	Primarily used to configure Steam Verifier for this particular server/guild, and also for moving in and out of voice channels.
 
 	Only admins or people with the correct role can use these commands. To set a role as the 'Bot Admin' role, try `/config botadmin`. Note that the `/summon` and `/unsummon` commands can be configured to be usable by everyone via `/config restrictsummoning disable`.
 	"""

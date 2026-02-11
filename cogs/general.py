@@ -203,7 +203,7 @@ class General(MangoCog):
 	
 	@commands.slash_command()
 	async def bot(self, inter):
-		"""Gets information about mangobyte"""
+		"""Gets information about Steam Verifier"""
 		pass # this is just a header for base commands
 
 	@commands.slash_command()
@@ -224,7 +224,25 @@ class General(MangoCog):
 		else: # We are setting a value
 			value = await botdatatypes.parse(inter, var, value, currentvalue)
 			botdata.userinfo(inter.author)[var["key"]] = value
-			await inter.send(f"✅ {setting} has been set!")
+			
+			response_msg = f"✅ {setting} has been set!"
+			
+			# If steam was successfully linked, assign LinkedSteam role
+			if setting == "steam" and value is not None and inter.guild:
+				guildinfo = botdata.guildinfo(inter.guild_id)
+				rank_role_ids = guildinfo.rank_role_ids
+				if rank_role_ids:
+					linked_role_id = rank_role_ids.get("LinkedSteam")
+					if linked_role_id:
+						linked_role = inter.guild.get_role(linked_role_id)
+						if linked_role and linked_role not in inter.author.roles:
+							try:
+								await inter.author.add_roles(linked_role)
+								response_msg += f"\n🔗 You've been given the **Linked Steam** role!"
+							except:
+								pass  # Silently fail if we can't assign the role
+			
+			await inter.send(response_msg)
 
 	@commands.slash_command()
 	async def ping(self, inter: disnake.CmdInter, count : commands.Range[int, 1, 20] = 1):
@@ -247,7 +265,7 @@ class General(MangoCog):
 
 	@bot.sub_command(name="changelog")
 	async def changelog(self, inter: disnake.CmdInter):
-		"""Gets a rough changelog for mangobyte"""
+		"""Gets a rough changelog for Steam Verifier"""
 		await self.safe_defer(inter)
 		commit_url = "https://github.com/mdiller/MangoByte"
 		description = f"For more information check out the [commit history]({commit_url}/commits/master) on GitHub, or visit the [Mangobyte Info Server]({HELP_GUILD_LINK}), and subscribe/follow the #updates channel.\n"
@@ -278,7 +296,7 @@ class General(MangoCog):
 
 	@bot.sub_command(name="info")
 	async def info(self, inter: disnake.CmdInter):
-		"""Prints info about mangobyte"""
+		"""Prints info about Steam Verifier"""
 		await self._bot_info(inter)
 	
 	# Separated away so we can call it from elsewhere
@@ -296,13 +314,13 @@ class General(MangoCog):
 			"Implemented using {} and a python discord api wrapper called [disnake]({})".format(github, python_version, library_url)))
 
 		embed.add_field(name="Help", value=(
-			f"If you want to invite mangobyte to your server/guild, click this [invite link]({settings.invite_link}). "
+			f"If you want to invite Steam Verifier to your server/guild, click this [invite link]({settings.invite_link}). "
 			f"If you have a question or suggestion, check out the [Help Server/Guild]({HELP_GUILD_LINK})."
-			f"To learn more about how mangobyte uses your data checkout the [Privacy Policy](https://github.com/mdiller/MangoByte/blob/master/docs/privacy_policy.md)."))
+			f"To learn more about how Steam Verifier uses your data checkout the [Privacy Policy](https://github.com/mdiller/MangoByte/blob/master/docs/privacy_policy.md)."))
 
 		embed.add_field(name="Find Out More", value=(
 			f"• Browse commands and command categories via the `/help` command\n"
-			f"• Learn more about mangobyte's core features with the `/docs` command\n"
+			f"• Learn more about Steam Verifier's core features with the `/docs` command\n"
 			f"• Per-user configuration is available via `/userconfig`\n"
 			f"• Configure settings for your server via `/config`"), inline=False)
 
@@ -433,7 +451,7 @@ class General(MangoCog):
 		post: The url or id of the post to link
 		comments: Which comments to show"""
 		if settings.reddit is None:
-			raise UserError("This MangoByte has not been configured to get reddit submissions. Gotta add your info to `settings.json`")
+			raise UserError("This Steam Verifier has not been configured to get reddit submissions. Gotta add your info to `settings.json`")
 
 		await self.safe_defer(inter)
 
@@ -936,7 +954,7 @@ class General(MangoCog):
 		if topic == "cogs":
 			embed = disnake.Embed()
 			embed.title = f"{inter.bot.user.name} Command Categories"
-			embed.description = "Mangobyte's commands are sorted into the following categories. To get more information about a specific category, try `/help <category>`"
+			embed.description = "Steam Verifier's commands are sorted into the following categories. To get more information about a specific category, try `/help <category>`"
 			for cogname in inter.bot.cogs:
 				if cogname != "Owner":
 					embed.add_field(

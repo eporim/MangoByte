@@ -91,9 +91,9 @@ class SteamNotLinkedError(UserError):
 		self.is_author = user is None
 		self.user = user
 		if not self.is_author:
-			super().__init__(f"{user.name} doesn't have a steam account linked to mangobyte. They should try `/userconfig steam show` to see how to link their steam account to mangobyte.")
+			super().__init__(f"{user.name} doesn't have a steam account linked to Steam Verifier. They should try `/userconfig steam show` to see how to link their steam account to Steam Verifier.")
 		else:
-			super().__init__("Ya haven't told me what yer steam account is.\nTry doin' `/userconfig steam show` to see how to link a steam account to mangobyte.")
+			super().__init__("Ya haven't told me what yer steam account is.\nTry doin' `/userconfig steam show` to see how to link a steam account to Steam Verifier.")
 
 class NoMatchHistoryError(UserError):
 	def __init__(self, steam_id):

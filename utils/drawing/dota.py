@@ -787,7 +787,7 @@ async def create_dota_emoticon(emoticon, url):
 			"--transparent", "0",
 			"-", "-o", filename], stdin=subprocess.PIPE, bufsize=-1)
 	except OSError as e:
-		raise UserError("Whoever setup this mangobyte doesn't have gifsicle installed")
+		raise UserError("Whoever setup this Steam Verifier doesn't have gifsicle installed")
 
 	for i in range(0, emoticon.frames):
 		box = (i * frame_width, 0, (i + 1) * frame_width, image.height)

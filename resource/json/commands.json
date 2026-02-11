@@ -8,7 +8,7 @@
 		{
 			"name": "Audio",
 			"short_help": "For playing audio in a voice channel",
-			"help": "For playing audio in a voice channel\n\nThe mangobyte audio system uses things called 'clips'. For more info on these, check out `/docs Clips`"
+			"help": "For playing audio in a voice channel\n\nThe Steam Verifier audio system uses things called 'clips'. For more info on these, check out `/docs Clips`"
 		},
 		{
 			"name": "Dotabase",
@@ -27,8 +27,8 @@
 		},
 		{
 			"name": "Admin",
-			"short_help": "Commands to help manage mangobyte on your server/guild",
-			"help": "Commands to help manage mangobyte on your server/guild\n\nPrimarily used to configure mangobyte for this particular server/guild, and also for moving in and out of voice channels.\n\nOnly admins or people with the correct role can use these commands. To set a role as the 'Bot Admin' role, try `/config botadmin`. Note that the `/summon` and `/unsummon` commands can be configured to be usable by everyone via `/config restrictsummoning disable`."
+			"short_help": "Commands to help manage Steam Verifier on your server/guild",
+			"help": "Commands to help manage Steam Verifier on your server/guild\n\nPrimarily used to configure Steam Verifier for this particular server/guild, and also for moving in and out of voice channels.\n\nOnly admins or people with the correct role can use these commands. To set a role as the 'Bot Admin' role, try `/config botadmin`. Note that the `/summon` and `/unsummon` commands can be configured to be usable by everyone via `/config restrictsummoning disable`."
 		}
 	],
 	"commands": [
@@ -62,8 +62,8 @@
 		{
 			"name": "bot changelog",
 			"signature": null,
-			"short_help": "Gets a rough changelog for mangobyte",
-			"help": "Gets a rough changelog for mangobyte",
+			"short_help": "Gets a rough changelog for Steam Verifier",
+			"help": "Gets a rough changelog for Steam Verifier",
 			"aliases": [],
 			"cog": "General",
 			"prefix": "/"
@@ -80,8 +80,8 @@
 		{
 			"name": "bot info",
 			"signature": null,
-			"short_help": "Prints info about mangobyte",
-			"help": "Prints info about mangobyte",
+			"short_help": "Prints info about Steam Verifier",
+			"help": "Prints info about Steam Verifier",
 			"aliases": [],
 			"cog": "General",
 			"prefix": "/"

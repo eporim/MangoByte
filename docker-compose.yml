@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   mangobyte:
     build: .
@@ -20,12 +18,12 @@ services:
       - ./backups:/backups
     entrypoint: /bin/sh
     command: >
-      -c "while true; do
-        TIMESTAMP=$$(date +%Y%m%d_%H%M%S);
-        cp /data/botdata.json /backups/botdata_$$TIMESTAMP.json 2>/dev/null || true;
-        cp /data/settings.json /backups/settings_$$TIMESTAMP.json 2>/dev/null || true;
-        ls -t /backups/botdata_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
-        ls -t /backups/settings_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
-        echo \"Backup completed at $$TIMESTAMP\";
-        sleep 43200;
-      done"
+      -c "echo 'Backup service started. Running every 12 hours.';
+        while true; do
+          sleep 43200;
+          TIMESTAMP=$$(date +%Y%m%d_%H%M%S);
+          cp /data/botdata.json /backups/botdata_$$TIMESTAMP.json 2>/dev/null && echo \"Backed up botdata at $$TIMESTAMP\";
+          cp /data/settings.json /backups/settings_$$TIMESTAMP.json 2>/dev/null && echo \"Backed up settings at $$TIMESTAMP\";
+          ls -t /backups/botdata_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
+          ls -t /backups/settings_*.json 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null;
+        done"

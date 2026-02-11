@@ -1625,7 +1625,7 @@ class DotaStats(MangoCog):
 
 		This is from the site https://gameishard.gg/dotawrapped/
 
-		Yes, I got permission from the guy who made this to include this in mangobyte"""
+		Yes, I got permission from the guy who made this to include this in Steam Verifier"""
 		if not player:
 			player = await DotaPlayer.from_author(ctx)
 

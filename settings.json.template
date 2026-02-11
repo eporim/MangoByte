@@ -1,4 +1,5 @@
 {
   "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
-  "odota": "YOUR_OPENDOTA_API_KEY_HERE"
+  "odota": "YOUR_OPENDOTA_API_KEY_HERE",
+  "test_guilds": [YOUR_DISCORD_SERVER_ID_HERE]
 }
